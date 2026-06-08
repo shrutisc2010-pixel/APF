@@ -1,0 +1,33 @@
+name: Build IntuneWin
+
+on:
+  push:
+    paths:
+      - 'Scripts/**'
+
+jobs:
+  package:
+    runs-on: windows-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Create Output Folder
+      run: mkdir Output
+
+    - name: Package Application
+      shell: powershell
+      run: |
+        .\IntuneWinAppUtil.exe `
+        -c .\Scripts `
+        -s Install.ps1 `
+        -o .\Output `
+        -q
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: IntuneWin
+        path: Output\*.intunewin
